@@ -1,0 +1,26 @@
+{
+    "builders": [{
+        "type": "docker",
+        "image": "alpine:latest",
+        "commit": true,
+        "run_command": [ "-d", "-t", "-i", "{{.Image}}", "/bin/sh" ], 
+        "changes": [
+            "VOLUME /data",
+            "WORKDIR /data",
+            "EXPOSE 80 443",
+            "ENTRYPOINT [\"docker-entrypoint.sh\"]"
+        ]
+    }],
+
+    "provisioners": [{
+        "type": "ansible",
+        "user": "root",
+        "playbook_file": "provision.yml"
+    }],
+
+    "post-processors": [[ {
+        "type": "docker-tag",
+        "repository": "docker.io/nidr0x/nginx-packer",
+        "tag": "latest"
+    } ]]
+}

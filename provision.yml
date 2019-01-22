@@ -1,0 +1,42 @@
+---
+
+- name: Provision Python
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Boostrap Python
+      raw: test -e /usr/bin/python || (apk add --no-cache python)
+
+- name: Starting building... 
+  hosts: all
+
+  tasks:
+    - name: Creating workdir
+      file:
+        path: /data
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: Installing nginx
+      package:
+        name: nginx 
+        state: present
+
+    - name: Putting entrypoints
+      copy:
+        src: config/{{ item }}
+        dest: /usr/local/bin/{{ item }}
+        mode: 0755
+        owner: root
+        group: root
+      with_items:
+        - docker-entrypoint.sh
+
+- name: Cleaning up container 
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Removing Python
+      raw: apk --no-cache del python
