@@ -1,4 +1,4 @@
-# WordPress Docker Container
+# Packer+Ansible nginx Docker image 
 
 The versatility offered by Packer is amazing. With this proof of concept, we are going to build a Docker image with nginx via Packer, provision with Ansible and finally commit the final image.
 
